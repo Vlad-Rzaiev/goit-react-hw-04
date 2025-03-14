@@ -1,7 +1,6 @@
-import toast, { Toaster } from 'react-hot-toast';
 import style from './SearchBar.module.css';
 
-export default function SearchBar({ onSubmit }) {
+export default function SearchBar({ onSubmit, toast }) {
   const handleSubmit = e => {
     e.preventDefault();
     const inputValue = e.target.elements.searchQuery.value.toLowerCase().trim();
@@ -30,7 +29,6 @@ export default function SearchBar({ onSubmit }) {
           Search
         </button>
       </form>
-      <Toaster position="top-right" />
     </header>
   );
 }
