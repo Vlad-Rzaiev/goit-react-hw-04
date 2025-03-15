@@ -8,12 +8,10 @@ export const fetchPhotos = async (searchQuery, currentPage) => {
       client_id: KEY,
       query: searchQuery,
       orientation: 'landscape',
-      per_page: 3,
+      per_page: 18,
       page: currentPage,
     },
   });
 
-  console.log(response);
-
-  return response.data.results;
+  return response;
 };

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchPhotos } from './unsplash-api';
 import toast, { Toaster } from 'react-hot-toast';
+import { nanoid } from 'nanoid';
 import SearchBar from './components/SearchBar/SearchBar';
 import ImageGallery from './components/ImageGallery/ImageGallery';
 import Section from './components/Section/Section';
@@ -18,27 +19,41 @@ function App() {
   const [page, setPage] = useState(1);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isEndOfCollection, setIsEndOfCollection] = useState(false);
 
-  const handleSearch = async searchQuery => {
+  const id = nanoid();
+
+  const handleSearch = searchQuery => {
     setPage(1);
     setImages([]);
-    setSearchQuery(searchQuery);
+    setIsEndOfCollection(false);
+    setSearchQuery(`${searchQuery}/${id}`);
   };
 
   useEffect(() => {
-    if (searchQuery === '') {
-      return;
-    }
+    if (searchQuery === '') return;
 
     async function getData() {
       try {
         setIsError(false);
         setIsLoading(true);
 
-        const response = await fetchPhotos(searchQuery, page);
+        const response = await fetchPhotos(searchQuery.split('/')[0], page);
+        const resultsData = response.data.results;
+
         setImages(prevImages => {
-          return [...prevImages, ...response];
+          return [...prevImages, ...resultsData];
         });
+
+        if (
+          resultsData.length === 0 ||
+          resultsData.length + images.length >= response.data.total
+        ) {
+          toast('No more images to load.', {
+            icon: '🔚',
+          });
+          setIsEndOfCollection(true);
+        }
       } catch {
         setIsError(true);
       } finally {
@@ -50,7 +65,6 @@ function App() {
   }, [page, searchQuery]);
 
   const openModal = imgItem => {
-    console.log(imgItem);
     setSelectedImage(imgItem);
     setIsOpenModal(true);
   };
@@ -68,7 +82,7 @@ function App() {
           <ImageGallery items={images} getImgUrl={openModal} />
         )}
         {isLoading && <Loader />}
-        {images.length > 0 && !isLoading && (
+        {images.length > 0 && !isLoading && !isEndOfCollection && (
           <LoadMoreBtn setPage={setPage} pageCount={page} />
         )}
         {isError && <ErrorMessage />}
