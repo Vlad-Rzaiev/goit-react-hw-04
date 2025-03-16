@@ -74,6 +74,34 @@ function App() {
     setIsOpenModal(false);
   };
 
+  const nextImg = () => {
+    const currentIndex = images.findIndex(img => img.id === selectedImage.id);
+
+    if (currentIndex === -1 || currentIndex === images.length - 1) {
+      return;
+    }
+
+    setSelectedImage(images[currentIndex + 1]);
+  };
+
+  const prevImg = () => {
+    const currentIndex = images.findIndex(img => img.id === selectedImage.id);
+
+    if (currentIndex === -1 || currentIndex === 0) {
+      return;
+    }
+
+    setSelectedImage(images[currentIndex - 1]);
+  };
+
+  const isFirstImg = selectedImage
+    ? images.findIndex(img => img.id === selectedImage.id) === 0
+    : false;
+
+  const isLastImg = selectedImage
+    ? images.findIndex(img => img.id === selectedImage.id) === images.length - 1
+    : false;
+
   return (
     <Section>
       <Container>
@@ -91,6 +119,10 @@ function App() {
           isOpen={isOpenModal}
           onClose={closeModal}
           imgItem={selectedImage}
+          nextImg={nextImg}
+          prevImg={prevImg}
+          isFirstImg={isFirstImg}
+          isLastImg={isLastImg}
         />
 
         <Toaster position="top-right" />

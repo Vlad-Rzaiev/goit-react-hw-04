@@ -1,10 +1,39 @@
+import { useEffect } from 'react';
 import { RxCross2 } from 'react-icons/rx';
+import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
 import Modal from 'react-modal';
 import style from './ImageModal.module.css';
 
 Modal.setAppElement('#root');
 
-export default function ImageModal({ isOpen, onClose, imgItem }) {
+export default function ImageModal({
+  isOpen,
+  onClose,
+  imgItem,
+  prevImg,
+  nextImg,
+  isFirstImg,
+  isLastImg,
+}) {
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = e => {
+      if (e.key === 'ArrowLeft' && !isFirstImg) {
+        prevImg();
+      }
+      if (e.key === 'ArrowRight' && !isLastImg) {
+        nextImg();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, prevImg, nextImg, isFirstImg, isLastImg]);
+
   return (
     <Modal
       className={style.modal}
@@ -55,6 +84,23 @@ export default function ImageModal({ isOpen, onClose, imgItem }) {
 
       <button className={style.closeBtn} type="button" onClick={onClose}>
         <RxCross2 size={30} />
+      </button>
+
+      <button
+        className={style.prevImg}
+        type="button"
+        onClick={prevImg}
+        disabled={isFirstImg}
+      >
+        <RiArrowLeftSLine className={style.prevIcon} size={30} />
+      </button>
+      <button
+        className={style.nextImg}
+        type="button"
+        onClick={nextImg}
+        disabled={isLastImg}
+      >
+        <RiArrowRightSLine className={style.nextIcon} size={30} />
       </button>
     </Modal>
   );

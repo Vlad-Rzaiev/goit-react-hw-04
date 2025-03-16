@@ -132,3 +132,77 @@
   font-size: 14px;
   color: #a0a0a0;
 }
+
+.prevImg,
+.nextImg {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 250ms linear, transform 250ms linear;
+}
+
+.prevImg {
+  left: 1px;
+}
+
+.nextImg {
+  right: 1px;
+}
+
+.prevIcon,
+.nextIcon {
+  color: #fff;
+  transition: color 250ms linear;
+}
+
+.prevImg:hover,
+.nextImg:hover,
+.prevImg:focus,
+.nextImg:focus {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.prevImg:hover .prevIcon,
+.nextImg:hover .nextIcon,
+.prevImg:focus .prevIcon,
+.nextImg:focus .nextIcon {
+  color: #00ffcc;
+}
+
+.prevImg:disabled,
+.nextImg:disabled {
+  background-color: rgba(255, 255, 255, 0.05);
+  cursor: not-allowed;
+  transform: translateY(-50%) scale(1);
+}
+
+.prevImg:disabled .prevIcon,
+.nextImg:disabled .nextIcon {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+  .prevImg,
+  .nextImg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .prevImg {
+    left: 10px;
+  }
+
+  .nextImg {
+    right: 10px;
+  }
+}
